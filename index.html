@@ -86,6 +86,13 @@
       <button>Trigger a Global Error</button>
     </section>
   </main>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "400c55db36bb4b0f97f81d91b2018060"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
 
   <script>
     let form = document.querySelector('form');
@@ -95,13 +102,84 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        if (isNaN(firstNum) || isNaN(secondNum)) {
+          throw new Error('Invalid number input! Please enter valid numbers.');
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        output.innerHTML = error.message;
+        console.error(error);
+        return;
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', () => {
+      console.log('Console Log Demo');
+    });
+    errorBtns[1].addEventListener('click', () => {
+      console.error('Console Error Demo');
+    });
+    errorBtns[2].addEventListener('click', () => {
+      console.count(`Count Button Called:`);
+    });
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('Console Warn Button');
+    });
+    errorBtns[4].addEventListener('click', () => {
+      console.assert(5 > 10, 'Console Assert Button');
+    });
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    });
+    errorBtns[6].addEventListener('click', () => {
+      console.dir(errorBtns[6]);
+    });
+    errorBtns[7].addEventListener('click', () => {
+      console.dirxml(errorBtns[7]);
+    });
+    errorBtns[8].addEventListener('click', () => {
+      console.group('Console Group Start');
+    });
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd();
+    });
+    errorBtns[10].addEventListener('click', () => {
+      console.table([{ name: 'Software Engineering', num: 110 }, { name: 'Programming Languages', num: 130 }, { name: 'Advanced Software Engineering', num: 112 }]);
+    });
+    errorBtns[11].addEventListener('click', () => {
+      console.time('Timer');
+    });
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd('Timer');
+    });
+
+    errorBtns[13].addEventListener('click', () => {
+      function first() {
+        second();
+      }
+      function second() {
+        third();
+      }
+      function third() {
+        console.trace('Console Trace Demo');
+      }
+
+      first();
+  });
+
+    errorBtns[14].addEventListener('click', () => {
+      badFunction();
+    });
+
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.error(`Oops! Global Error: ${message} at ${source}:${lineno}:${colno}`);
+      return true;
+    };
   </script>
 </body>
 
